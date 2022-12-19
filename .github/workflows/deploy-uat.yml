@@ -8,15 +8,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Adding Known Hosts
-        run: ssh-keyscan -p ${{ secrets.SSH_PORT}} -H ${{ secrets.SSH_HOST }}  >> ~/.ssh/known_hosts
-      
-      - name: Make app.zip
-        uses: actions/upload-artifact@v3
+      - name: rsync deployments
+        uses: burnett01/rsync-deployments@5.2.1
         with:
-          name: app
-          path: dist/app
-
-      - name: Deploy with rsync
-        run: rsync -avz -e "ssh -p ${{ secrets.SSH_PORT }}" ./dist/app/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:var/www/test-calltracking/
-
+          switches: -avz --delete
+          path: app/
+          remote_path: /var/www/test-calltracking
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_port: ${{ secrets.SSH_PORT }}
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY_WEB }}
+          
