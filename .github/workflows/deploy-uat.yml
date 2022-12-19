@@ -11,11 +11,10 @@ jobs:
       - name: rsync deployments
         uses: burnett01/rsync-deployments@5.2.1
         with:
-          switches: -avz --delete
+          switches: -avz --delete --size-only
           path: app/
           remote_path: /var/www/test-calltracking
           remote_host: ${{ secrets.SSH_HOST }}
           remote_port: ${{ secrets.SSH_PORT }}
           remote_user: ${{ secrets.SSH_USER }}
           remote_key: ${{ secrets.SSH_PRIVATE_KEY_WEB }}
-          
